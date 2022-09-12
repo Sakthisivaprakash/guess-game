@@ -1,30 +1,60 @@
-import { View, Text, StyleSheet, Image, Dimensions } from "react-native";
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+} from "react-native";
 import PrimaryButton from "../components/ui/PrimaryButtons";
 import Title from "../components/ui/Title";
 import Colors from "../const/colors";
 
-const GameOverScreen = ({ roundsNumber, userNumber, onStartNewGame}) => {
+const GameOverScreen = ({ roundsNumber, userNumber, onStartNewGame }) => {
+  const { width, height } = useWindowDimensions();
+
+  let imageSize = 300;
+
+  if (width < 380) {
+    imageSize = 150;
+  }
+
+  if (height < 420) {
+    imageSize = 80;
+  }
+
+  const imageStyle = {
+    width: imageSize,
+    height: imageSize,
+    borderRadius: imageSize / 2,
+  };
+
+  // console.log(width, height);
+
   return (
-    <View style={styles.rootCont}>
-      <Title>Game is over!</Title>
-      <View style={styles.imageCont}>
-        <Image
-          source={require("../assets/images/success.png")}
-          style={styles.image}
-        />
+    <ScrollView>
+      <View style={styles.rootCont}>
+        <Title>Game is over!</Title>
+        <View style={[styles.imageCont, imageStyle]}>
+          <Image
+            source={require("../assets/images/success.png")}
+            style={styles.image}
+          />
+        </View>
+        <Text style={styles.summaryText}>
+          Your phone needed <Text style={styles.highlight}>{roundsNumber}</Text>{" "}
+          rounds to guess the number{" "}
+          <Text style={styles.highlight}>{userNumber}</Text>.
+        </Text>
+        <PrimaryButton onPress={onStartNewGame}>Start New Game</PrimaryButton>
       </View>
-      <Text style={styles.summaryText}>
-        Your phone needed <Text style={styles.highlight}>{roundsNumber}</Text> rounds to guess the number{" "}
-        <Text style={styles.highlight}>{userNumber}</Text>.
-      </Text>
-      <PrimaryButton onPress={onStartNewGame}>Start New Game</PrimaryButton>
-    </View>
+    </ScrollView>
   );
 };
 
 export default GameOverScreen;
 
-const deviceWidth = Dimensions.get('window').width;
+// const deviceWidth = Dimensions.get('window').width;
 
 const styles = StyleSheet.create({
   rootCont: {
@@ -33,10 +63,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  screen: {
+    flex: 1,
+  },
   imageCont: {
-    width: deviceWidth < 380 ? 150 : 300,
-    height: deviceWidth < 380 ? 150 : 300,
-    borderRadius: deviceWidth < 380 ? 75 : 150,
+    // width: deviceWidth < 380 ? 150 : 300,
+    // height: deviceWidth < 380 ? 150 : 300,
+    // borderRadius: deviceWidth < 380 ? 75 : 150,
     borderWidth: 3,
     borderColor: Colors.primary800,
     overflow: "hidden",
@@ -47,13 +80,13 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   summaryText: {
-    fontFamily: 'open-sans',
+    fontFamily: "open-sans",
     fontSize: 24,
-    textAlign: 'center',
-    marginBottom: 24
+    textAlign: "center",
+    marginBottom: 24,
   },
   highlight: {
-    fontFamily: 'open-sans-bold',
-    color: Colors.primary500
-  }
+    fontFamily: "open-sans-bold",
+    color: Colors.primary500,
+  },
 });
